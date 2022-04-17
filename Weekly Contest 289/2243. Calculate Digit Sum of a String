@@ -1,0 +1,22 @@
+//2243. Calculate Digit Sum of a String.
+
+
+class Solution {
+    public String digitSum(String s, int k) {
+         while(s.length() > k){
+             char[]a = s.toCharArray();
+           s = "";
+             int i = 0;
+            while(i<a.length){
+                 int k1 = k;
+                 int sum = 0;
+                while(i<a.length && k1-->0){
+                        sum += (a[i]-'0');
+                         i++;
+                 }
+                s = s+""+ sum;
+             }
+         }
+         return s;
+         }
+    }
