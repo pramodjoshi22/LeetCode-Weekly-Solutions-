@@ -1,0 +1,73 @@
+//6053. Count Unguarded Cells in the Grid
+
+
+
+enum class State {
+    GUARDED,
+    NOT_GUARDED,
+    WALL, 
+    GUARD
+};
+
+class Solution {
+public:
+    int countUnguarded(int m, int n, vector<vector<int>>& guards, vector<vector<int>>& walls) {
+        vector<vector<State>> grid(m, vector<State>(n, State::NOT_GUARDED));
+        for(const auto& guard : guards) {
+            grid[guard[0]][guard[1]] = State::GUARD;
+        }
+        for(const auto& wall : walls) {
+            grid[wall[0]][wall[1]] = State::WALL;
+        }
+
+        for(const auto& guard : guards) {
+            int x = guard[0];
+            int y = guard[1];
+            for(int i = x - 1; i >= 0; i--) {
+                if(grid[i][y] == State::GUARD || grid[i][y] == State::WALL) {
+                    break;
+                }
+                else {
+                    grid[i][y] = State::GUARDED;
+                }
+            } 
+
+            for(int i = x + 1; i < m; i++) {
+                if(grid[i][y] == State::GUARD || grid[i][y] == State::WALL) {
+                    break;
+                }
+                else {
+                    grid[i][y] = State::GUARDED;
+                }
+            } 
+
+            for(int i = y - 1; i >= 0; i--) {
+                if(grid[x][i] == State::GUARD || grid[x][i] == State::WALL) {
+                    break;
+                }
+                else {
+                    grid[x][i] = State::GUARDED;
+                }
+            } 
+
+            for(int i = y + 1; i < n; i++) {
+                if(grid[x][i] == State::GUARD || grid[x][i] == State::WALL) {
+                    break;
+                }
+                else {
+                    grid[x][i] = State::GUARDED;
+                }
+            } 
+        }
+
+        int counter = 0;
+        for(const auto& row : grid) {
+            for(State state : row) {
+                if(state == State::NOT_GUARDED) {
+                    ++counter;
+                }
+            }
+        }
+        return counter;
+    }
+};
