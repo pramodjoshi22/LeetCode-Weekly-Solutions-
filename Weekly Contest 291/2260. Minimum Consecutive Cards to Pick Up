@@ -1,0 +1,27 @@
+//2260. Minimum Consecutive Cards to Pick Up
+
+
+class Solution {
+public:
+    int minimumCardPickup(vector<int>& cards) 
+    {
+        int count=INT_MAX;
+        int n=cards.size();
+        map<int,int> m;
+        for(int i=0;i<n;i++)
+        {
+            if(m.find(cards[i])==m.end())
+            {
+                m[cards[i]]=i;
+                continue;
+            }
+            count=min(count,i-m[cards[i]]+1);
+            m[cards[i]]=i;
+        }
+        if(count==INT_MAX)
+        {
+            return -1;
+        }
+        return count;
+    }
+};
