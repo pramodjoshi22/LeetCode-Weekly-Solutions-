@@ -1,3 +1,36 @@
 //6059. Check if There Is a Valid Parentheses String Path
 
 
+ class Solution {
+
+    private int m = 0, n = 0;
+
+    public boolean hasValidPath(char[][] grid) {
+        m = grid.length; n = grid[0].length;
+        Set<Integer>[][] map = new HashSet[m][n];
+        return dfs(grid, 0, 0, 0, map);
+    }
+
+    private boolean dfs(char[][] grid, int x, int y, int opens, Set<Integer>[][] map) {
+        if (map[x][y] != null && map[x][y].contains(opens)) return false;
+        if (map[x][y] == null) map[x][y] = new HashSet<>();
+
+        map[x][y].add(opens);
+        if (grid[x][y] == '(') opens++; else opens--;
+        if (opens < 0) return false;
+
+        if (x == m - 1 && y == n - 1) return opens == 0;
+        if (x < m - 1 && dfs(grid, x + 1, y, opens, map)) return true;
+        return y < n - 1 && dfs(grid, x, y + 1, opens, map);
+    }
+
+    public static void main(String[] args) {
+        assert new Solution().hasValidPath(new char[][]{
+            {'(','(','('},
+            {')','(',')'},
+            {'(','(',')'},
+            {'(','(',')'}
+        });
+    }
+
+}
