@@ -1,1 +1,61 @@
 //6058. Count Number of Texts
+
+
+
+class Solution {
+    private int MOD = 1000000007;
+    public int countTexts(String presseKeys) {
+        List<List<Integer>> list = new ArrayList<>();
+        int maxLen = 0;
+        char prevCh = 'a';
+        int curLen = 0;
+        for(int i=0;i<presseKeys.length();i++){
+            if(presseKeys.charAt(i) == prevCh){
+                curLen++;
+                maxLen = Math.max(maxLen,curLen);
+            }else{
+                if(curLen >0){
+                    list.add(Arrays.asList(curLen,prevCh-'0'));
+                }
+                curLen = 1;
+                prevCh = presseKeys.charAt(i);
+            }
+        }
+        list.add(Arrays.asList(curLen,prevCh-'0'));
+        
+       // System.out.println(list);        
+        
+        long[] dop3 = new long[Math.max(maxLen+1,5)];
+        long[] dop4 = new long[Math.max(maxLen+1,5)];             
+        
+        dop3[1] = 1;
+        dop3[2] = 2;
+        dop3[3] = 4;
+        
+        dop4[0] = 1;
+        dop4[1] = 1;
+        dop4[2] = 2;
+        dop4[3] = 4;
+
+        for(int i=4;i<dop3.length;i++){            
+            dop3[i] = ((long)dop3[i-1]+dop3[i-2]+dop3[i-3])%MOD;
+            dop4[i] = ((long)dop4[i-1]+dop4[i-2]+dop4[i-3]+dop4[i-4])%MOD;
+        }
+        
+        //System.out.println(Arrays.toString(dp3));
+        //System.out.println(Arrays.toString(dp4));
+        
+        long ret = 1;
+        for(List<Integer> num:list){
+            long nextVal = 1;
+            if(num.get(1)==7 || num.get(1)==9){
+                nextVal = dop4[num.get(0)];
+            }else            {
+                nextVal = dop3[num.get(0)];
+            }
+            ret =  (ret*nextVal)%MOD;
+        }
+        
+        return (int)ret;
+    }
+}
