@@ -1,1 +1,33 @@
-//
+//6085. Maximum Total Importance of Roads
+
+class Solution {
+
+    public long maximumImportance(int n, int[][] roads) {
+        Map<Integer, Integer> weights = new HashMap<>();
+        for (var road : roads) {
+            weights.merge(road[0], 1, Integer::sum);
+            weights.merge(road[1], 1, Integer::sum);
+        }
+
+        PriorityQueue<Map.Entry<Integer, Integer>> queue = new PriorityQueue<>((a, b) -> b.getValue().compareTo(a.getValue()));
+        queue.addAll(weights.entrySet());
+
+        int[] importance = new int[n];
+        while (!queue.isEmpty()) {
+            importance[queue.remove().getKey()] = n--;
+        }
+        for (int i = importance.length - 1; i >= 0; i--) {
+            if (importance[i] == 0) importance[i] = n--;
+        }
+
+        long ans = 0;
+        for (var road : roads) {
+            ans += importance[road[0]] + importance[road[1]];
+        }
+        return ans;
+    }
+
+    public static void main(String[] args) {
+    }
+
+}
